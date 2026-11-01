@@ -60,8 +60,8 @@
 <script>
 (()=>{
 const root=document.getElementById('salao-app');const el=id=>root.querySelector('#sd-'+id);
-const types=['Visita','Reunião Anciãos','Saída de campo','Manutenção','Reunião especial','Orador de Betel','Congresso','Reunião com Pioneiros','Treinamento','Outros'];
-const groups=['Barro Branco','N. Metalúrgicos','Jd St Etelvina','Metalúrgicos','Pedra Branca','Sarandi','Têxteis'];
+const types=['Visita','Reunião Anciãos','Saída de campo','Manutenção','Reunião especial','Orador de Betel','Congresso','Reunião com Pioneiros','Treinamento','Casamento','Outros'];
+const groups=['Barro Branco','N. Metalúrgicos','Jd St Etelvina','Metalúrgicos','Pedra Branca','Sarandi','Têxteis','Outra Cong.'];
 const groupStyle={
  'Barro Branco':{abbr:'BB',name:'Barro Branco',color:'#93c5fd'},
  'N. Metalúrgicos':{abbr:'NM',name:'Nova Metalúrgicos',color:'#c4b5fd'},
@@ -69,11 +69,14 @@ const groupStyle={
  'Metalúrgicos':{abbr:'MT',name:'Metalúrgicos',color:'#67e8f9'},
  'Pedra Branca':{abbr:'PB',name:'Pedra Branca',color:'#86efac'},
  'Sarandi':{abbr:'SRD',name:'Sarandi',color:'#f9a8d4'},
- 'Têxteis':{abbr:'TXT',name:'Têxteis',color:'#fdba74'}
+ 'Têxteis':{abbr:'TXT',name:'Têxteis',color:'#fdba74'},
+ 'Outra Cong.':{abbr:'OUT',name:'Outra Cong.',color:'#cbd5e1'}
 };
 for(const g of groups){const config=groupStyle[g];const item=document.createElement('div');item.className='legend-item';item.style.setProperty('--group-color',config.color);const badge=document.createElement('span');badge.className='legend-swatch';badge.textContent=config.abbr;const name=document.createElement('span');name.textContent=config.name;item.append(badge,name);el('legend').append(item);}
 
-const times=Array.from({length:27},(_,i)=>String(8+Math.floor(i/2)).padStart(2,'0')+':'+(i%2?'30':'00'));
+const times=['Dia Todo',...Array.from({length:27},(_,i)=>String(8+Math.floor(i/2)).padStart(2,'0')+':'+(i%2?'30':'00'))];
+const timeKey=t=>t==='Dia Todo'?'00:00':t;
+const sortTime=(a,b)=>timeKey(a.time).localeCompare(timeKey(b.time));
 for(const [name,values] of [['type',types],['group',groups],['time',times]])values.forEach(v=>el(name).add(new Option(name==='group'?groupStyle[v].name:v,v)));
 const API_URL='https://script.google.com/macros/s/AKfycbzRA2GUKKpF7eq6hEHpBcMYUpRDgpDIIqfiIG8AoJoPqDbsDNzLTs2DLLybG4-5YvoE/exec';
 let month=10,year=2026,day=1,editing=null,editingRevision=0,data={},ready=false,busy=false,loading=false,pendingId=null;
@@ -113,15 +116,15 @@ for(let i=0;i<offset;i++){const blank=document.createElement('span');blank.setAt
 for(let d=1;d<=last;d++){
  const cell=document.createElement('div');cell.className='day'+(d===day?' selected':'')+(today.getFullYear()===year&&today.getMonth()===month&&today.getDate()===d?' today':'');
  const k=year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
- const events=(Array.isArray(data[k])?data[k]:[]).filter(e=>e&&types.includes(e.type)&&groups.includes(e.group)&&times.includes(e.time)).sort((a,b)=>a.time.localeCompare(b.time));
+ const events=(Array.isArray(data[k])?data[k]:[]).filter(e=>e&&types.includes(e.type)&&groups.includes(e.group)&&times.includes(e.time)).sort(sortTime);
  const number=document.createElement('button');number.className='day-number';number.type='button';number.textContent=d;number.setAttribute('aria-label',d+' de '+el('month').textContent+', '+events.length+' atividades');number.setAttribute('aria-pressed',String(d===day));number.onclick=()=>{day=d;say('');render();form();};cell.append(number);
  const badges=document.createElement('div');badges.className='group-badges';
- events.forEach(item=>{const config=groupStyle[item.group];const badge=document.createElement('button');badge.type='button';badge.className='group-badge';badge.style.setProperty('--group-color',config.color);badge.setAttribute('aria-label','Abrir evento: '+item.type+', '+config.name+', '+d+' de '+el('month').textContent+' às '+item.time);badge.setAttribute('aria-haspopup','dialog');const abbr=document.createElement('span');abbr.textContent=config.abbr;const time=document.createElement('span');time.className='event-time';time.textContent=item.time;badge.append(abbr,time);badge.onclick=()=>openEvent(item,d);badges.append(badge);});
+ events.forEach(item=>{const config=groupStyle[item.group];const badge=document.createElement('button');badge.type='button';badge.className='group-badge';badge.style.setProperty('--group-color',config.color);badge.setAttribute('aria-label','Abrir evento: '+item.type+', '+config.name+', '+d+' de '+el('month').textContent+(item.time==='Dia Todo'?' · Dia Todo':' às '+item.time));badge.setAttribute('aria-haspopup','dialog');const abbr=document.createElement('span');abbr.textContent=config.abbr;const time=document.createElement('span');time.className='event-time';time.textContent=item.time;badge.append(abbr,time);badge.onclick=()=>openEvent(item,d);badges.append(badge);});
  cell.append(badges);grid.append(cell);
 }
-el('date').textContent=day+' de '+el('month').textContent.toLowerCase();const list=entries().sort((a,b)=>a.time.localeCompare(b.time));el('count').textContent=new Intl.DateTimeFormat('pt-BR',{weekday:'long'}).format(new Date(year,month,day))+' · '+list.length+(list.length===1?' atividade':' atividades');el('entries').replaceChildren();
+el('date').textContent=day+' de '+el('month').textContent.toLowerCase();const list=entries().sort(sortTime);el('count').textContent=new Intl.DateTimeFormat('pt-BR',{weekday:'long'}).format(new Date(year,month,day))+' · '+list.length+(list.length===1?' atividade':' atividades');el('entries').replaceChildren();
 if(!list.length){const empty=document.createElement('div');empty.className='empty';empty.textContent='O dia está livre. Adicione uma atividade abaixo.';el('entries').append(empty);}
-list.forEach(item=>{const row=document.createElement('div');row.className='entry';row.style.setProperty('--group-color',groupStyle[item.group].color);const body=document.createElement('div');body.className='entry-text';const title=document.createElement('div');title.className='entry-title';title.textContent=item.type;const group=document.createElement('div');group.className='entry-meta';group.textContent=groupStyle[item.group].abbr+' · '+groupStyle[item.group].name;body.append(title,group);const time=document.createElement('div');time.className='entry-time';time.textContent=item.time;const edit=document.createElement('button');edit.className='edit';edit.type='button';edit.textContent='Editar';edit.setAttribute('aria-label','Editar '+item.type+' às '+item.time);edit.onclick=()=>form(item);row.append(body,time,edit);el('entries').append(row);});
+list.forEach(item=>{const row=document.createElement('div');row.className='entry';row.style.setProperty('--group-color',groupStyle[item.group].color);const body=document.createElement('div');body.className='entry-text';const title=document.createElement('div');title.className='entry-title';title.textContent=item.type;const group=document.createElement('div');group.className='entry-meta';group.textContent=groupStyle[item.group].abbr+' · '+groupStyle[item.group].name;body.append(title,group);const time=document.createElement('div');time.className='entry-time';time.textContent=item.time;const edit=document.createElement('button');edit.className='edit';edit.type='button';edit.textContent='Editar';edit.setAttribute('aria-label','Editar '+item.type+(item.time==='Dia Todo'?' · Dia Todo':' às '+item.time));edit.onclick=()=>form(item);row.append(body,time,edit);el('entries').append(row);});
 }
 let popupEvent=null,popupDay=null;
 function openEvent(item,eventDay){
