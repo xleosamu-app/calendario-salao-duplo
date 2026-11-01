@@ -1,0 +1,168 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101319"><title>CALENDARIO SALÃO DUPLO</title><style>body{margin:0;background:#101319;padding:12px 0}button,select{-webkit-tap-highlight-color:transparent}</style></head><body><div id="salao-app">
+<style>
+#salao-app{--bg:#101319;--panel:#191e27;--line:#2b3340;--txt:#edf1f7;--muted:#a3adbe;--accent:#a4e8c5;color:var(--txt);background:var(--bg);font:15px system-ui,-apple-system,sans-serif;max-width:620px;margin:auto;border-radius:24px;padding:24px 16px 20px;box-sizing:border-box;color-scheme:dark}
+#salao-app *{box-sizing:border-box}#salao-app button,#salao-app select{font:inherit}#salao-app button{cursor:pointer;color:inherit}#salao-app .eyebrow{font-size:10px;letter-spacing:2.5px;color:var(--accent);font-weight:600;margin-bottom:8px}#salao-app h1{font-size:22px;line-height:1.2;margin:0;font-weight:650;letter-spacing:-.7px}#salao-app .subtitle{font-size:12px;color:var(--muted);margin:8px 0 24px}#salao-app .monthbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}#salao-app .monthname{font-size:25px;font-weight:600;letter-spacing:-.7px}#salao-app .year{font-size:14px;color:var(--muted);margin-left:8px}#salao-app .arrows{display:flex;gap:6px}#salao-app .arrow{width:44px;height:44px;border:1px solid var(--line);border-radius:14px;background:var(--panel);font-size:23px}#salao-app button:disabled{opacity:.25;cursor:default}#salao-app .week,#salao-app .grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}#salao-app .week{font-size:10px;letter-spacing:.6px;color:var(--muted);text-align:center;margin-bottom:10px}#salao-app .day{min-height:56px;padding:8px 2px 6px;border:1px solid transparent;background:var(--panel);border-radius:12px;text-align:center;font-size:14px;display:flex;align-items:center;flex-direction:column;gap:6px;position:relative}#salao-app .day.selected{background:var(--accent);color:#122a23;font-weight:700}#salao-app .day.today:not(.selected){border-color:var(--accent)}#salao-app .day .dots{display:flex;gap:3px;height:5px}#salao-app .dot{height:4px;width:4px;border-radius:50%;background:var(--accent)}#salao-app .selected .dot{background:#1d5843}#salao-app .hint{text-align:center;font-size:11px;color:var(--muted);margin:14px 0 22px}#salao-app .rule{height:1px;background:var(--line);margin-bottom:20px}#salao-app .date-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:15px}#salao-app .date-title{font-size:17px;font-weight:600}#salao-app .date-sub{font-size:12px;color:var(--muted);margin-top:4px}#salao-app .add{width:44px;height:44px;background:var(--panel);border:1px solid var(--line);border-radius:14px;font-size:24px}#salao-app .empty{padding:16px 0 20px;color:var(--muted);font-size:13px}#salao-app .entry{border-left:3px solid var(--accent);background:var(--panel);border-radius:0 12px 12px 0;margin-bottom:10px;padding:13px;display:flex;align-items:center;gap:10px}#salao-app .entry-text{flex:1;min-width:0}#salao-app .entry-title{font-size:14px;font-weight:600;overflow-wrap:anywhere}#salao-app .entry-meta{font-size:12px;color:var(--muted);margin-top:5px}#salao-app .entry-time{font-size:13px;color:var(--accent);white-space:nowrap}#salao-app .edit{background:none;border:none;color:var(--muted);min-width:44px;min-height:44px;font-size:12px}#salao-app .editor{background:var(--panel);padding:16px;border-radius:16px;border:1px solid var(--line);margin-top:6px}#salao-app .editor-head{font-size:13px;font-weight:600;margin:0 0 17px}#salao-app label{display:block;color:var(--muted);font-size:11px;margin-bottom:7px}#salao-app select{width:100%;height:46px;background:#11161e;border:1px solid #354051;border-radius:10px;padding:0 11px;color:var(--txt);font-size:16px;margin-bottom:15px}#salao-app .actions{display:flex;gap:8px;margin-top:3px}#salao-app .save{flex:1;min-height:45px;background:var(--accent);border:0;border-radius:10px;color:#122a23;font-size:13px;font-weight:650}#salao-app .cancel{background:none;border:1px solid #465164;border-radius:10px;padding:10px;font-size:12px}#salao-app .remove{border:0;background:none;color:#ffadb1;font-size:12px;min-height:44px;padding:10px 0 0}#salao-app .foot{font-size:10px;text-align:center;color:var(--muted);margin:20px 0 0}#salao-app .status{min-height:18px;font-size:12px;color:var(--accent);margin-top:10px}#salao-app button:focus-visible,#salao-app select:focus-visible{outline:3px solid #91c3ff;outline-offset:3px}#salao-app [hidden]{display:none!important}#salao-app .swipe{touch-action:pan-y} @media(min-width:500px){#salao-app{padding:28px}#salao-app .day{min-height:66px}}
+
+#salao-app .day{min-height:64px;justify-content:flex-start;gap:5px;padding:8px 2px}
+#salao-app .day.selected{background:#22362e;color:var(--txt);border-color:var(--accent)}
+#salao-app .day .group-badges{display:flex;flex-direction:column;align-items:stretch;gap:4px;width:100%;padding:0 1px}
+#salao-app .group-badge{display:block;background:var(--group-color);color:#111827;border-radius:5px;padding:3px 0;font-size:11px;line-height:1.2;font-weight:750;white-space:nowrap}
+#salao-app .legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px;margin:18px 0 6px}
+#salao-app .legend-item{display:flex;align-items:center;gap:7px;min-width:0;font-size:11px;line-height:1.4;color:var(--muted)}
+#salao-app .legend-swatch{background:var(--group-color);color:#111827;font-size:11px;line-height:1.3;font-weight:750;border-radius:5px;padding:3px 4px;min-width:32px;text-align:center;flex:none}
+#salao-app .entry{border-left-color:var(--group-color,var(--accent))}
+#salao-app .entry-time{color:var(--group-color,var(--accent))}
+
+#salao-app .day{padding:0 2px 6px;gap:2px}
+#salao-app .day-number{width:100%;min-height:44px;background:none;border:0;border-radius:9px;font-size:14px;color:inherit}
+#salao-app .group-badge{border:0;min-height:44px;width:100%;padding:5px 1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+#salao-app .group-badge .event-time{font-size:10px;font-weight:500}
+#salao-app .event-dialog{background:var(--panel);color:var(--txt);font:inherit;border:1px solid var(--line);border-top:4px solid var(--event-color,var(--accent));border-radius:20px;padding:22px;width:calc(100% - 32px);max-width:380px;max-height:85dvh;overflow:auto;box-shadow:0 20px 80px #0008}
+#salao-app .event-dialog::backdrop{background:#05080dbb}
+#salao-app .dialog-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+#salao-app .dialog-kicker{font-size:11px;letter-spacing:1.5px;color:var(--event-color,var(--accent))}
+#salao-app .dialog-close{border:1px solid var(--line);border-radius:12px;background:var(--bg);min-height:44px;min-width:44px;font-size:23px}
+#salao-app .event-dialog h2{font-size:23px;line-height:1.3;margin:18px 0 20px;overflow-wrap:anywhere}
+#salao-app .event-dialog dl{margin:0 0 22px;display:grid;gap:16px}
+#salao-app .event-dialog dt{font-size:11px;color:var(--muted);margin-bottom:5px}
+#salao-app .event-dialog dd{font-size:15px;margin:0;overflow-wrap:anywhere}
+#salao-app .dialog-footer{display:flex;gap:10px}
+</style>
+<div class="eyebrow">AGENDA COMPARTILHADA</div>
+<h1>CALENDARIO SALÃO DUPLO</h1>
+<p class="subtitle">Um espaço, uma agenda. Tudo organizado.</p>
+<div class="swipe" id="sd-swipe">
+<div class="monthbar"><div><span class="monthname" id="sd-month"></span><span class="year" id="sd-year"></span></div><div class="arrows"><button class="arrow" id="sd-prev" aria-label="Mês anterior">‹</button><button class="arrow" id="sd-next" aria-label="Próximo mês">›</button></div></div>
+<div class="week" aria-hidden="true"><span>DOM</span><span>SEG</span><span>TER</span><span>QUA</span><span>QUI</span><span>SEX</span><span>SÁB</span></div>
+<div class="grid" id="sd-grid" aria-label="Dias do mês"></div>
+<div class="legend" id="sd-legend" aria-label="Cores e abreviações das congregações" hidden></div>
+<p class="hint">‹ &nbsp; Deslize para mudar o mês &nbsp; ›</p>
+</div>
+<div class="rule"></div>
+<div class="date-row"><div><div class="date-title" id="sd-date"></div><div class="date-sub" id="sd-count"></div></div><button class="add" id="sd-add" aria-label="Adicionar atividade">+</button></div>
+<div id="sd-entries"></div>
+<form class="editor" id="sd-editor">
+<p class="editor-head" id="sd-editor-title">Nova atividade</p>
+<label for="sd-type">ATIVIDADE</label><select id="sd-type" required><option value="">Selecione a atividade</option></select>
+<label for="sd-group">CONGREGAÇÃO</label><select id="sd-group" required><option value="">Selecione a congregação</option></select>
+<label for="sd-time">HORÁRIO</label><select id="sd-time" required><option value="">Selecione o horário</option></select>
+<div class="actions"><button class="save" type="submit">Salvar atividade</button><button class="cancel" id="sd-cancel" type="button">Cancelar</button></div>
+<button class="remove" id="sd-remove" type="button" hidden>Excluir atividade</button>
+</form>
+<div class="status" id="sd-status" role="status" aria-live="polite"></div>
+<p class="foot" id="sd-connection" role="status">Conectando à agenda compartilhada…</p><button class="cancel" type="button" id="sd-refresh" style="display:block;margin:12px auto">Atualizar agenda</button>
+<dialog class="event-dialog" id="sd-popup" aria-labelledby="sd-popup-title" aria-describedby="sd-popup-date sd-popup-group sd-popup-time">
+<div class="dialog-top"><span class="dialog-kicker">DETALHES DO EVENTO</span><button type="button" class="dialog-close" id="sd-popup-close" aria-label="Fechar evento" autofocus>×</button></div>
+<h2 id="sd-popup-title"></h2>
+<dl><div><dt>DATA</dt><dd id="sd-popup-date"></dd></div><div><dt>CONGREGAÇÃO</dt><dd id="sd-popup-group"></dd></div><div><dt>HORÁRIO</dt><dd id="sd-popup-time"></dd></div></dl>
+<div class="dialog-footer"><button class="save" type="button" id="sd-popup-edit">Editar evento</button><button class="cancel" type="button" id="sd-popup-done">Fechar</button></div>
+</dialog>
+<script>
+(()=>{
+const root=document.getElementById('salao-app');const el=id=>root.querySelector('#sd-'+id);
+const types=['Visita','Reunião Anciãos','Saída de campo','Manutenção','Reunião especial','Orador de Betel','Congresso','Reunião com Pioneiros','Treinamento','Outros'];
+const groups=['Barro Branco','N. Metalúrgicos','Jd St Etelvina','Metalúrgicos','Pedra Branca','Sarandi','Têxteis'];
+const groupStyle={
+ 'Barro Branco':{abbr:'BB',name:'Barro Branco',color:'#93c5fd'},
+ 'N. Metalúrgicos':{abbr:'NM',name:'Nova Metalúrgicos',color:'#c4b5fd'},
+ 'Jd St Etelvina':{abbr:'STE',name:'Santa Etelvina',color:'#fde047'},
+ 'Metalúrgicos':{abbr:'MT',name:'Metalúrgicos',color:'#67e8f9'},
+ 'Pedra Branca':{abbr:'PB',name:'Pedra Branca',color:'#86efac'},
+ 'Sarandi':{abbr:'SRD',name:'Sarandi',color:'#f9a8d4'},
+ 'Têxteis':{abbr:'TXT',name:'Têxteis',color:'#fdba74'}
+};
+for(const g of groups){const config=groupStyle[g];const item=document.createElement('div');item.className='legend-item';item.style.setProperty('--group-color',config.color);const badge=document.createElement('span');badge.className='legend-swatch';badge.textContent=config.abbr;const name=document.createElement('span');name.textContent=config.name;item.append(badge,name);el('legend').append(item);}
+
+const times=Array.from({length:27},(_,i)=>String(8+Math.floor(i/2)).padStart(2,'0')+':'+(i%2?'30':'00'));
+for(const [name,values] of [['type',types],['group',groups],['time',times]])values.forEach(v=>el(name).add(new Option(name==='group'?groupStyle[v].name:v,v)));
+const API_URL='https://script.google.com/macros/s/AKfycbzRA2GUKKpF7eq6hEHpBcMYUpRDgpDIIqfiIG8AoJoPqDbsDNzLTs2DLLybG4-5YvoE/exec';
+let month=10,year=2026,day=1,editing=null,editingRevision=0,data={},ready=false,busy=false,loading=false,pendingId=null;
+const key=()=>year+'-'+String(month+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+const entries=()=>Array.isArray(data[key()])?data[key()].filter(e=>e&&types.includes(e.type)&&groups.includes(e.group)&&times.includes(e.time)):[];
+function say(text){el('status').textContent=text;}
+function setBusy(value){busy=value;root.querySelectorAll('button,select').forEach(e=>e.disabled=value);if(!value){el('prev').disabled=year===2026&&month===10;el('editor').querySelector('[type="submit"]').disabled=!ready;el('remove').disabled=!ready;}}
+async function request(action,event){
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),30000);
+ try{
+  const options={method:action?'POST':'GET',credentials:'omit',redirect:'follow',signal:controller.signal};
+  if(action){options.headers={'Content-Type':'text/plain;charset=utf-8'};options.body=JSON.stringify({action,event});}
+  const response=await fetch(API_URL+(action?'':'?t='+Date.now()),options);
+  if(!response.ok)throw new Error('O Google não respondeu. Tente novamente.');
+  let result;try{result=await response.json();}catch{throw new Error('A conexão retornou uma página inesperada. Verifique a implantação do Apps Script.');}
+  if(!result.ok){const error=new Error(result.message||'Não foi possível concluir.');error.code=result.code;throw error;}
+  return result;
+ }catch(error){if(error.name==='AbortError')throw new Error('A conexão demorou demais. Atualize a agenda antes de tentar novamente.');throw error;}
+ finally{clearTimeout(timeout);}
+}
+async function loadEvents(announce=false){
+ if(busy||loading)return false;loading=true;el('refresh').disabled=true;
+ try{
+  const result=await request();if(!Array.isArray(result.events))throw new Error('Resposta inválida.');
+  const next={};result.events.forEach(item=>{if(item&&typeof item.id==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(item.date)&&types.includes(item.type)&&groups.includes(item.group)&&times.includes(item.time)){(next[item.date]||=[]).push(item);}});
+  data=next;ready=true;render();el('editor').querySelector('[type="submit"]').disabled=false;el('remove').disabled=false;
+  el('connection').textContent='Agenda compartilhada · Atualizada às '+new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit'}).format(new Date());
+  if(announce)say('Agenda atualizada.');return true;
+ }catch(error){el('connection').textContent=ready?'Sem conexão · Exibindo a última consulta':'Não foi possível carregar a agenda';say(error.message);return false;}
+ finally{loading=false;el('refresh').disabled=false;}
+}
+function form(item=null){editing=item?item.id:null;editingRevision=item?item.revision:0;pendingId=null;el('editor').hidden=false;el('editor-title').textContent=item?'Editar atividade':'Nova atividade';el('type').value=item?item.type:'';el('group').value=item?item.group:'';el('time').value=item?item.time:'';el('remove').hidden=!item;el('editor').querySelector('[type="submit"]').disabled=!ready||busy;}
+function render(){
+el('month').textContent=new Intl.DateTimeFormat('pt-BR',{month:'long'}).format(new Date(year,month,1)).replace(/^./,s=>s.toUpperCase());el('year').textContent=year;el('prev').disabled=year===2026&&month===10;
+const grid=el('grid');grid.replaceChildren();const offset=new Date(year,month,1).getDay(),last=new Date(year,month+1,0).getDate();const today=new Date();
+for(let i=0;i<offset;i++){const blank=document.createElement('span');blank.setAttribute('aria-hidden','true');grid.append(blank);}
+for(let d=1;d<=last;d++){
+ const cell=document.createElement('div');cell.className='day'+(d===day?' selected':'')+(today.getFullYear()===year&&today.getMonth()===month&&today.getDate()===d?' today':'');
+ const k=year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+ const events=(Array.isArray(data[k])?data[k]:[]).filter(e=>e&&types.includes(e.type)&&groups.includes(e.group)&&times.includes(e.time)).sort((a,b)=>a.time.localeCompare(b.time));
+ const number=document.createElement('button');number.className='day-number';number.type='button';number.textContent=d;number.setAttribute('aria-label',d+' de '+el('month').textContent+', '+events.length+' atividades');number.setAttribute('aria-pressed',String(d===day));number.onclick=()=>{day=d;say('');render();form();};cell.append(number);
+ const badges=document.createElement('div');badges.className='group-badges';
+ events.forEach(item=>{const config=groupStyle[item.group];const badge=document.createElement('button');badge.type='button';badge.className='group-badge';badge.style.setProperty('--group-color',config.color);badge.setAttribute('aria-label','Abrir evento: '+item.type+', '+config.name+', '+d+' de '+el('month').textContent+' às '+item.time);badge.setAttribute('aria-haspopup','dialog');const abbr=document.createElement('span');abbr.textContent=config.abbr;const time=document.createElement('span');time.className='event-time';time.textContent=item.time;badge.append(abbr,time);badge.onclick=()=>openEvent(item,d);badges.append(badge);});
+ cell.append(badges);grid.append(cell);
+}
+el('date').textContent=day+' de '+el('month').textContent.toLowerCase();const list=entries().sort((a,b)=>a.time.localeCompare(b.time));el('count').textContent=new Intl.DateTimeFormat('pt-BR',{weekday:'long'}).format(new Date(year,month,day))+' · '+list.length+(list.length===1?' atividade':' atividades');el('entries').replaceChildren();
+if(!list.length){const empty=document.createElement('div');empty.className='empty';empty.textContent='O dia está livre. Adicione uma atividade abaixo.';el('entries').append(empty);}
+list.forEach(item=>{const row=document.createElement('div');row.className='entry';row.style.setProperty('--group-color',groupStyle[item.group].color);const body=document.createElement('div');body.className='entry-text';const title=document.createElement('div');title.className='entry-title';title.textContent=item.type;const group=document.createElement('div');group.className='entry-meta';group.textContent=groupStyle[item.group].abbr+' · '+groupStyle[item.group].name;body.append(title,group);const time=document.createElement('div');time.className='entry-time';time.textContent=item.time;const edit=document.createElement('button');edit.className='edit';edit.type='button';edit.textContent='Editar';edit.setAttribute('aria-label','Editar '+item.type+' às '+item.time);edit.onclick=()=>form(item);row.append(body,time,edit);el('entries').append(row);});
+}
+let popupEvent=null,popupDay=null;
+function openEvent(item,eventDay){
+ popupEvent=item;popupDay=eventDay;
+ const config=groupStyle[item.group];el('popup').style.setProperty('--event-color',config.color);
+ el('popup-title').textContent=item.type;
+ el('popup-date').textContent=new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(year,month,eventDay));
+ el('popup-group').textContent=config.abbr+' · '+config.name;
+ el('popup-time').textContent=item.time;
+ el('popup').showModal();
+}
+el('popup-close').onclick=()=>el('popup').close();el('popup-done').onclick=()=>el('popup').close();
+el('popup').addEventListener('click',e=>{if(e.target===el('popup')){const r=el('popup').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)el('popup').close();}});
+el('popup-edit').onclick=()=>{if(!popupEvent)return;const item=popupEvent;day=popupDay;el('popup').close();say('');render();form(item);el('type').focus();};
+function change(delta){if(busy)return;if(year===2026&&month===10&&delta<0)return;const date=new Date(year,month+delta,1);year=date.getFullYear();month=date.getMonth();day=1;say('');render();form();}
+el('prev').onclick=()=>change(-1);el('next').onclick=()=>change(1);el('add').onclick=()=>{form();el('type').focus();};el('cancel').onclick=()=>{el('editor').hidden=true;editing=null;};
+el('editor').onsubmit=async e=>{
+ e.preventDefault();if(busy||loading||!ready||!el('editor').reportValidity())return;
+ const date=key();const id=editing||(pendingId||=Date.now().toString(36)+Math.random().toString(36).slice(2));
+ const item={id,date,type:el('type').value,group:el('group').value,time:el('time').value,revision:editing?editingRevision:0};
+ if(entries().some(x=>x.id!==id&&x.type===item.type&&x.group===item.group&&x.time===item.time)){say('Esta atividade já está cadastrada neste horário.');return;}
+ setBusy(true);say('Salvando na agenda compartilhada…');let saved=false;
+ try{const result=await request('save',item);data[date]=[...(data[date]||[]).filter(x=>x.id!==id),result.event];render();form();el('editor').hidden=true;pendingId=null;say('Atividade salva para todos.');saved=true;}
+ catch(error){say(error.message+' O salvamento não foi confirmado. Atualize a agenda antes de tentar novamente.');}
+ finally{setBusy(false);}
+ if(saved)loadEvents();
+};
+el('remove').onclick=async()=>{
+ if(busy||loading||!ready||!editing)return;const date=key(),id=editing;
+ setBusy(true);say('Excluindo da agenda compartilhada…');let deleted=false;
+ try{await request('delete',{id,revision:editingRevision});data[date]=(data[date]||[]).filter(x=>x.id!==id);render();form();el('editor').hidden=true;say('Atividade excluída para todos.');deleted=true;}
+ catch(error){say(error.message+' A exclusão não foi confirmada. Atualize a agenda.');}
+ finally{setBusy(false);}
+ if(deleted)loadEvents();
+};
+el('refresh').onclick=()=>loadEvents(true);
+setInterval(()=>{if(!document.hidden&&!busy)loadEvents();},60000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!busy)loadEvents();});
+let start=null;el('swipe').addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;start={x:e.clientX,y:e.clientY};});el('swipe').addEventListener('pointerup',e=>{if(!start)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;start=null;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.5)change(dx<0?1:-1);});el('swipe').addEventListener('pointercancel',()=>start=null);
+render();form();loadEvents();
+})();
+</script>
+</div>
+</body></html>
